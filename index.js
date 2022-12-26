@@ -7,13 +7,25 @@ const DB_URL = "mongodb://localhost:27017/mestodb";
 
 const app = express();
 
-mongoose.connect(DB_URL, {
-  useNewUrlParser: true,
-});
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/", router);
 app.use("/users", router);
 
-app.listen(PORT, () => {
-  console.log("App is working on PORT " + PORT);
-});
+async function startApp() {
+  try {
+    mongoose.connect(DB_URL, {
+      useNewUrlParser: true,
+    });
+
+    app.listen(PORT, () => {
+      console.log("App is working on PORT " + PORT);
+    });
+  } catch (err) {
+    console.log("Произошла ошибка при запуске приложения: " + err);
+  }
+}
+
+startApp();
