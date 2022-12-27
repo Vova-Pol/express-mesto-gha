@@ -22,10 +22,19 @@ router.patch("/users/me/avatar", patchUserAvatar);
 
 // --- Cards Router
 
-const { getCards, postCard, deleteCard } = require("./controllers/cards");
+const {
+  getCards,
+  postCard,
+  deleteCard,
+  putLike,
+  deleteLike,
+} = require("./controllers/cards");
 
 router.get("/cards", getCards);
 router.post("/cards", postCard);
 router.delete("/cards/:cardId", deleteCard);
+
+router.put("/cards/:cardId/likes", putLike);
+router.delete("/cards/:cardId/likes", deleteLike);
 
 module.exports = router;

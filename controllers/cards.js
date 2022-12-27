@@ -32,4 +32,32 @@ const deleteCard = (req, res) => {
     });
 };
 
-module.exports = { getCards, postCard, deleteCard };
+const putLike = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true }
+  )
+    .then((newData) => {
+      res.send(newData);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
+};
+
+const deleteLike = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true }
+  )
+    .then((newData) => {
+      res.send(newData);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
+};
+
+module.exports = { getCards, postCard, deleteCard, putLike, deleteLike };
