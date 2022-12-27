@@ -55,7 +55,17 @@ const patchUserInfo = (req, res) => {
 };
 
 const patchUserAvatar = (req, res) => {
-  res.send("Patch Avatar");
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar: req.body.avatar },
+    { new: true }
+  )
+    .then((newData) => {
+      res.send(newData);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
 };
 
 module.exports = {
