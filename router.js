@@ -9,19 +9,20 @@ const {
   getUsers,
   postUser,
   getUserById,
-} = require("./controllers/controllers-users");
+  patchUserInfo,
+  patchUserAvatar,
+} = require("./controllers/users");
 
 router.get("/users", getUsers);
 router.get("/users/:userId", getUserById);
 router.post("/users", postUser);
 
+router.patch("/users/me", patchUserInfo);
+router.patch("/users/me/avatar", patchUserAvatar);
+
 // --- Cards Router
 
-const {
-  getCards,
-  postCard,
-  deleteCard,
-} = require("./controllers/controllers-cards");
+const { getCards, postCard, deleteCard } = require("./controllers/cards");
 
 router.get("/cards", getCards);
 router.post("/cards", postCard);

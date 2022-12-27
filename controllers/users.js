@@ -30,4 +30,38 @@ const postUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, postUser, getUserById };
+const patchUserInfo = (req, res) => {
+  const { name, about } = req.body;
+  const newInfo = {};
+
+  if (name && about) {
+    newInfo.name = name;
+    newInfo.about = about;
+  } else if (name) {
+    newInfo.name = name;
+  } else if (about) {
+    newInfo.about = about;
+  } else {
+    res.send("Ошибка в условной контрукции в patchUserInfo()");
+  }
+
+  User.findByIdAndUpdate(req.user._id, newInfo, { new: true })
+    .then((newData) => {
+      res.send(newData);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
+};
+
+const patchUserAvatar = (req, res) => {
+  res.send("Patch Avatar");
+};
+
+module.exports = {
+  getUsers,
+  postUser,
+  getUserById,
+  patchUserInfo,
+  patchUserAvatar,
+};
