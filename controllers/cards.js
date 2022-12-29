@@ -19,7 +19,9 @@ const postCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Переданы некорректные данные" });
+        res.status(400).send({
+          message: "Переданы некорректные данные при создании карточки",
+        });
         return;
       }
 
@@ -35,7 +37,7 @@ const deleteCard = (req, res) => {
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(404).send({
-          message: "Запрашиваемая карточка не найдена",
+          message: "Карточка с указанным _id не найдена",
         });
         return;
       }
@@ -54,9 +56,14 @@ const putLike = (req, res) => {
       res.send(newData);
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
+        res.status(400).send({
+          message: "Переданы некорректные данные для постановки лайка",
+        });
+        return;
+      } else if (err.name === "CastError") {
         res.status(404).send({
-          message: "Запрашиваемая карточка не найдена",
+          message: "Передан несуществующий _id карточки",
         });
         return;
       }
@@ -75,9 +82,14 @@ const deleteLike = (req, res) => {
       res.send(newData);
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
+        res.status(400).send({
+          message: "Переданы некорректные данные для снятия лайка",
+        });
+        return;
+      } else if (err.name === "CastError") {
         res.status(404).send({
-          message: "Запрашиваемая карточка не найдена",
+          message: "Передан несуществующий _id карточки",
         });
         return;
       }

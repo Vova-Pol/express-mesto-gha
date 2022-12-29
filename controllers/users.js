@@ -16,7 +16,7 @@ const getUserById = (req, res) => {
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(404).send({
-          message: "Запрашиваемый пользователь не найден",
+          message: "Пользователь по указанному _id не найден",
         });
         return;
       }
@@ -33,7 +33,9 @@ const postUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Переданы некорректные данные" });
+        res.status(400).send({
+          message: "Переданы некорректные данные при создании пользователя",
+        });
         return;
       }
 
@@ -60,7 +62,14 @@ const patchUserInfo = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Переданы некорректные данные" });
+        res.status(400).send({
+          message: " Переданы некорректные данные при обновлении профиля",
+        });
+        return;
+      } else if (err.name === "CastError") {
+        res.status(404).send({
+          message: "Пользователь с указанным _id не найден",
+        });
         return;
       }
 
@@ -79,7 +88,14 @@ const patchUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Переданы некорректные данные" });
+        res.status(400).send({
+          message: "Переданы некорректные данные при обновлении аватара",
+        });
+        return;
+      } else if (err.name === "CastError") {
+        res.status(404).send({
+          message: "Пользователь с указанным _id не найден",
+        });
         return;
       }
 
