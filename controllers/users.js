@@ -14,6 +14,12 @@ const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((userData) => res.send(userData))
     .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(404).send({
+          message: "Запрашиваемый пользователь не найден",
+        });
+        return;
+      }
       res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
@@ -26,6 +32,11 @@ const postUser = (req, res) => {
       res.send(newUser);
     })
     .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(400).send({ message: "Переданы некорректные данные" });
+        return;
+      }
+
       res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
@@ -41,8 +52,6 @@ const patchUserInfo = (req, res) => {
     newInfo.name = name;
   } else if (about) {
     newInfo.about = about;
-  } else {
-    res.send("Ошибка в условной контрукции в patchUserInfo()");
   }
 
   User.findByIdAndUpdate(req.user._id, newInfo, { new: true })
@@ -50,6 +59,11 @@ const patchUserInfo = (req, res) => {
       res.send(newData);
     })
     .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(400).send({ message: "Переданы некорректные данные" });
+        return;
+      }
+
       res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
@@ -64,6 +78,11 @@ const patchUserAvatar = (req, res) => {
       res.send(newData);
     })
     .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(400).send({ message: "Переданы некорректные данные" });
+        return;
+      }
+
       res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };

@@ -18,6 +18,11 @@ const postCard = (req, res) => {
       res.send(newCard);
     })
     .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(400).send({ message: "Переданы некорректные данные" });
+        return;
+      }
+
       res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
@@ -28,6 +33,13 @@ const deleteCard = (req, res) => {
       res.send(cardData);
     })
     .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(404).send({
+          message: "Запрашиваемая карточка не найдена",
+        });
+        return;
+      }
+
       res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
@@ -42,6 +54,13 @@ const putLike = (req, res) => {
       res.send(newData);
     })
     .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(404).send({
+          message: "Запрашиваемая карточка не найдена",
+        });
+        return;
+      }
+
       res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
@@ -56,6 +75,13 @@ const deleteLike = (req, res) => {
       res.send(newData);
     })
     .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(404).send({
+          message: "Запрашиваемая карточка не найдена",
+        });
+        return;
+      }
+
       res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
