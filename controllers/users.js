@@ -13,18 +13,19 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((userData) => {
-      userData
-        ? res.send({ data: userData })
-        : res.status(404).send({
-            message: "Пользователь по указанному _id не найден",
-          });
+      if (userData) {
+        res.send({ data: userData });
+      } else {
+        res.status(404).send({
+          message: "Пользователь по указанному _id не найден",
+        });
+      }
     })
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(400).send({
           message: "Передан некорректный _id пользователя",
         });
-        return;
       } else {
         res.status(500).send({ message: `Произошла ошибка: ${err}` });
       }
@@ -34,7 +35,7 @@ const getUserById = (req, res) => {
 const postUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
-  User.create({ name: name, about: about, avatar: avatar })
+  User.create({ name, about, avatar })
     .then((newUser) => {
       res.send({ data: newUser });
     })
@@ -43,10 +44,9 @@ const postUser = (req, res) => {
         res.status(400).send({
           message: "Переданы некорректные данные при создании пользователя",
         });
-        return;
+      } else {
+        res.status(500).send({ message: `Произошла ошибка: ${err}` });
       }
-
-      res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
 
@@ -75,15 +75,13 @@ const patchUserInfo = (req, res) => {
         res.status(400).send({
           message: " Переданы некорректные данные при обновлении профиля",
         });
-        return;
       } else if (err.name === "CastError") {
         res.status(404).send({
           message: "Пользователь с указанным _id не найден",
         });
-        return;
+      } else {
+        res.status(500).send({ message: `Произошла ошибка: ${err}` });
       }
-
-      res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
 
@@ -101,15 +99,13 @@ const patchUserAvatar = (req, res) => {
         res.status(400).send({
           message: "Переданы некорректные данные при обновлении аватара",
         });
-        return;
       } else if (err.name === "CastError") {
         res.status(404).send({
           message: "Пользователь с указанным _id не найден",
         });
-        return;
+      } else {
+        res.status(500).send({ message: `Произошла ошибка: ${err}` });
       }
-
-      res.status(500).send({ message: `Произошла ошибка: ${err}` });
     });
 };
 

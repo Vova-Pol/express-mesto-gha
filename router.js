@@ -1,11 +1,7 @@
 const router = require("express").Router();
 
-router.get("/", (req, res, next) => {
-  try {
-    res.send("Main Page");
-  } catch (err) {
-    res.send(err.name);
-  }
+router.get("/", (res) => {
+  res.send("Main Page");
 });
 
 // --- Users Router

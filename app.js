@@ -1,13 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const router = require("./router.js");
+const bodyParser = require("body-parser");
+const router = require("./router");
 
 const { PORT = 3000 } = process.env;
 const DB_URL = "mongodb://localhost:27017/mestodb";
 
 const app = express();
 
-const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -33,15 +33,15 @@ async function startApp() {
     });
 
     app.listen(PORT, () => {
-      console.log("App is working on PORT " + PORT);
+      console.log(`App is working on PORT ${PORT}`);
     });
   } catch (err) {
-    console.log("Произошла ошибка при запуске приложения: " + err);
+    console.log(`Произошла ошибка при запуске приложения: ${err}`);
   }
 }
 
 startApp();
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req) => {
   console.log(req.user._id);
 };
