@@ -22,10 +22,13 @@ app.use((req, res, next) => {
 app.use("/", router);
 app.use("/users", router);
 app.use("/cards", router);
+app.use("*", (req, res) => {
+  res.status(404).send({ message: "Такой страницы не существует" });
+});
 
 async function startApp() {
   try {
-    mongoose.connect(DB_URL, {
+    await mongoose.connect(DB_URL, {
       useNewUrlParser: true,
     });
 
