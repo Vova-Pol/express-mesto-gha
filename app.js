@@ -1,11 +1,11 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const usersRouter = require("./routers/users");
-const cardsRouter = require("./routers/cards");
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const usersRouter = require('./routers/users');
+const cardsRouter = require('./routers/cards');
 
 const { PORT = 3000 } = process.env;
-const DB_URL = "mongodb://localhost:27017/mestodb";
+const DB_URL = 'mongodb://localhost:27017/mestodb';
 
 const app = express();
 
@@ -14,16 +14,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   req.user = {
-    _id: "63a86aec35e239f3ab163d09",
+    _id: '63a86aec35e239f3ab163d09',
   };
 
   next();
 });
 
-app.use("/", usersRouter);
-app.use("/", cardsRouter);
-app.use("*", (req, res) => {
-  res.status(404).send({ message: "Такой страницы не существует" });
+app.use('/', usersRouter);
+app.use('/', cardsRouter);
+app.use('*', (req, res) => {
+  res.status(404).send({ message: 'Такой страницы не существует' });
 });
 
 async function startApp() {

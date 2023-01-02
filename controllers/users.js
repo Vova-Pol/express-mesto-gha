@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 const badRequestErrCode = 400;
 const notFoundErrCode = 404;
@@ -12,7 +12,7 @@ const getUsers = (req, res) => {
     .catch(() => {
       res
         .status(serverErrCode)
-        .send({ message: "Произошла ошибка на сервере" });
+        .send({ message: 'Произошла ошибка на сервере' });
     });
 };
 
@@ -23,19 +23,19 @@ const getUserById = (req, res) => {
         res.send({ data: userData });
       } else {
         res.status(notFoundErrCode).send({
-          message: "Пользователь по указанному _id не найден",
+          message: 'Пользователь по указанному _id не найден',
         });
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         res.status(badRequestErrCode).send({
-          message: "Передан некорректный _id пользователя",
+          message: 'Передан некорректный _id пользователя',
         });
       } else {
         res
           .status(serverErrCode)
-          .send({ message: "Произошла ошибка на сервере" });
+          .send({ message: 'Произошла ошибка на сервере' });
       }
     });
 };
@@ -48,14 +48,14 @@ const postUser = (req, res) => {
       res.send({ data: newUser });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res.status(badRequestErrCode).send({
-          message: "Переданы некорректные данные при создании пользователя",
+          message: 'Переданы некорректные данные при создании пользователя',
         });
       } else {
         res
           .status(serverErrCode)
-          .send({ message: "Произошла ошибка на сервере" });
+          .send({ message: 'Произошла ошибка на сервере' });
       }
     });
 };
@@ -82,23 +82,23 @@ const patchUserInfo = (req, res) => {
         res.send({ data: newData });
       } else {
         res.status(notFoundErrCode).send({
-          message: "Пользователь с указанным _id не найден",
+          message: 'Пользователь с указанным _id не найден',
         });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res.status(badRequestErrCode).send({
-          message: "Переданы некорректные данные при обновлении профиля",
+          message: 'Переданы некорректные данные при обновлении профиля',
         });
-      } else if (err.name === "CastError") {
+      } else if (err.name === 'CastError') {
         res.status(badRequestErrCode).send({
-          message: "Передан некорректный _id пользователя",
+          message: 'Передан некорректный _id пользователя',
         });
       } else {
         res
           .status(serverErrCode)
-          .send({ message: "Произошла ошибка на сервере" });
+          .send({ message: 'Произошла ошибка на сервере' });
       }
     });
 };
@@ -107,30 +107,30 @@ const patchUserAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar: req.body.avatar },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((newData) => {
       if (newData) {
         res.send({ data: newData });
       } else {
         res.status(notFoundErrCode).send({
-          message: "Пользователь с указанным _id не найден",
+          message: 'Пользователь с указанным _id не найден',
         });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res.status(badRequestErrCode).send({
-          message: "Переданы некорректные данные при обновлении аватара",
+          message: 'Переданы некорректные данные при обновлении аватара',
         });
-      } else if (err.name === "CastError") {
+      } else if (err.name === 'CastError') {
         res.status(badRequestErrCode).send({
-          message: "Передан некорректный _id пользователя",
+          message: 'Передан некорректный _id пользователя',
         });
       } else {
         res
           .status(serverErrCode)
-          .send({ message: "Произошла ошибка на сервере" });
+          .send({ message: 'Произошла ошибка на сервере' });
       }
     });
 };
