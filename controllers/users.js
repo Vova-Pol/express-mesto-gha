@@ -78,16 +78,22 @@ const patchUserInfo = (req, res) => {
     runValidators: true,
   })
     .then((newData) => {
-      res.send({ data: newData });
+      if (newData) {
+        res.send({ data: newData });
+      } else {
+        res.status(notFoundErrCode).send({
+          message: "Пользователь с указанным _id не найден",
+        });
+      }
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
         res.status(badRequestErrCode).send({
-          message: " Переданы некорректные данные при обновлении профиля",
+          message: "Переданы некорректные данные при обновлении профиля",
         });
       } else if (err.name === "CastError") {
-        res.status(notFoundErrCode).send({
-          message: "Пользователь с указанным _id не найден",
+        res.status(badRequestErrCode).send({
+          message: "Передан некорректный _id пользователя",
         });
       } else {
         res
@@ -104,7 +110,13 @@ const patchUserAvatar = (req, res) => {
     { new: true, runValidators: true }
   )
     .then((newData) => {
-      res.send({ data: newData });
+      if (newData) {
+        res.send({ data: newData });
+      } else {
+        res.status(notFoundErrCode).send({
+          message: "Пользователь с указанным _id не найден",
+        });
+      }
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -112,8 +124,8 @@ const patchUserAvatar = (req, res) => {
           message: "Переданы некорректные данные при обновлении аватара",
         });
       } else if (err.name === "CastError") {
-        res.status(notFoundErrCode).send({
-          message: "Пользователь с указанным _id не найден",
+        res.status(badRequestErrCode).send({
+          message: "Передан некорректный _id пользователя",
         });
       } else {
         res
