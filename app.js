@@ -41,7 +41,3 @@ async function startApp() {
 }
 
 startApp();
-
-module.exports.createCard = (req) => {
-  console.log(req.user._id);
-};
