@@ -9,8 +9,10 @@ const getCards = (req, res) => {
     .then((cardsData) => {
       res.send({ data: cardsData });
     })
-    .catch((err) => {
-      res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+    .catch(() => {
+      res
+        .status(serverErrCode)
+        .send({ message: "Произошла ошибка на сервере" });
     });
 };
 
@@ -29,7 +31,9 @@ const postCard = (req, res) => {
         return;
       }
 
-      res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+      res
+        .status(serverErrCode)
+        .send({ message: "Произошла ошибка на сервере" });
     });
 };
 
@@ -50,7 +54,9 @@ const deleteCard = (req, res) => {
           message: "Передан некорректный _id пользователя",
         });
       } else {
-        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+        res
+          .status(serverErrCode)
+          .send({ message: "Произошла ошибка на сервере" });
       }
     });
 };
@@ -76,7 +82,9 @@ const putLike = (req, res) => {
           message: "Переданы некорректные данные для постановки лайка",
         });
       } else {
-        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+        res
+          .status(serverErrCode)
+          .send({ message: "Произошла ошибка на сервере" });
       }
     });
 };
@@ -102,7 +110,9 @@ const deleteLike = (req, res) => {
           message: "Переданы некорректные данные для снятия лайка",
         });
       } else {
-        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+        res
+          .status(serverErrCode)
+          .send({ message: "Произошла ошибка на сервере" });
       }
     });
 };

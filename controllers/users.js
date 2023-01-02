@@ -9,8 +9,10 @@ const getUsers = (req, res) => {
     .then((usersData) => {
       res.send({ data: usersData });
     })
-    .catch((err) => {
-      res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+    .catch(() => {
+      res
+        .status(serverErrCode)
+        .send({ message: "Произошла ошибка на сервере" });
     });
 };
 
@@ -31,7 +33,9 @@ const getUserById = (req, res) => {
           message: "Передан некорректный _id пользователя",
         });
       } else {
-        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+        res
+          .status(serverErrCode)
+          .send({ message: "Произошла ошибка на сервере" });
       }
     });
 };
@@ -49,7 +53,9 @@ const postUser = (req, res) => {
           message: "Переданы некорректные данные при создании пользователя",
         });
       } else {
-        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+        res
+          .status(serverErrCode)
+          .send({ message: "Произошла ошибка на сервере" });
       }
     });
 };
@@ -84,7 +90,9 @@ const patchUserInfo = (req, res) => {
           message: "Пользователь с указанным _id не найден",
         });
       } else {
-        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+        res
+          .status(serverErrCode)
+          .send({ message: "Произошла ошибка на сервере" });
       }
     });
 };
@@ -108,7 +116,9 @@ const patchUserAvatar = (req, res) => {
           message: "Пользователь с указанным _id не найден",
         });
       } else {
-        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
+        res
+          .status(serverErrCode)
+          .send({ message: "Произошла ошибка на сервере" });
       }
     });
 };
