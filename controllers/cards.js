@@ -1,12 +1,16 @@
 const Card = require("../models/card");
 
+const badRequestErrCode = 400;
+const notFoundErrCode = 404;
+const serverErrCode = 500;
+
 const getCards = (req, res) => {
   Card.find()
     .then((cardsData) => {
       res.send({ data: cardsData });
     })
     .catch((err) => {
-      res.status(500).send({ message: `Произошла ошибка: ${err}` });
+      res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
     });
 };
 
@@ -19,13 +23,13 @@ const postCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({
+        res.status(badRequestErrCode).send({
           message: "Переданы некорректные данные при создании карточки",
         });
         return;
       }
 
-      res.status(500).send({ message: `Произошла ошибка: ${err}` });
+      res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
     });
 };
 
@@ -35,18 +39,18 @@ const deleteCard = (req, res) => {
       if (cardData) {
         res.send({ data: cardData });
       } else {
-        res.status(404).send({
+        res.status(notFoundErrCode).send({
           message: "Карточка с указанным _id не найдена",
         });
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(400).send({
+        res.status(badRequestErrCode).send({
           message: "Передан некорректный _id пользователя",
         });
       } else {
-        res.status(500).send({ message: `Произошла ошибка: ${err}` });
+        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
       }
     });
 };
@@ -61,18 +65,18 @@ const putLike = (req, res) => {
       if (newData) {
         res.send({ data: newData });
       } else {
-        res.status(404).send({
+        res.status(notFoundErrCode).send({
           message: "Передан несуществующий _id карточки",
         });
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(400).send({
+        res.status(badRequestErrCode).send({
           message: "Переданы некорректные данные для постановки лайка",
         });
       } else {
-        res.status(500).send({ message: `Произошла ошибка: ${err}` });
+        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
       }
     });
 };
@@ -87,18 +91,18 @@ const deleteLike = (req, res) => {
       if (newData) {
         res.send({ data: newData });
       } else {
-        res.status(404).send({
+        res.status(notFoundErrCode).send({
           message: "Передан несуществующий _id карточки",
         });
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(400).send({
+        res.status(badRequestErrCode).send({
           message: "Переданы некорректные данные для снятия лайка",
         });
       } else {
-        res.status(500).send({ message: `Произошла ошибка: ${err}` });
+        res.status(serverErrCode).send({ message: `Произошла ошибка: ${err}` });
       }
     });
 };
