@@ -1,9 +1,11 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const badRequestErrCode = 400;
 const notFoundErrCode = 404;
 const serverErrCode = 500;
+const unauthorizedErrCode = 401;
 
 const getUsers = (req, res) => {
   User.find()
@@ -138,10 +140,23 @@ const patchUserAvatar = (req, res) => {
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      res.send('Всё хорошо: ' + user);
+    })
+    .catch((err) => {
+      res.send('Что-то не так: ' + err);
+    });
+};
+
 module.exports = {
   getUsers,
   postUser,
   getUserById,
   patchUserInfo,
   patchUserAvatar,
+  login,
 };
