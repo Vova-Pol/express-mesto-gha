@@ -1,3 +1,4 @@
+const validator = require('validator');
 const User = require('../models/user');
 
 const badRequestErrCode = 400;
@@ -41,23 +42,28 @@ const getUserById = (req, res) => {
 };
 
 const postUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-
-  User.create({ name, about, avatar })
-    .then((newUser) => {
-      res.send({ data: newUser });
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(badRequestErrCode).send({
-          message: 'Переданы некорректные данные при создании пользователя',
-        });
-      } else {
-        res
-          .status(serverErrCode)
-          .send({ message: 'Произошла ошибка на сервере' });
-      }
+  const { email, password, name, about, avatar } = req.body;
+  if (validator.isEmail(email)) {
+    User.create({ email, password, name, about, avatar })
+      .then((newUser) => {
+        res.send({ data: newUser });
+      })
+      .catch((err) => {
+        if (err.name === 'ValidationError') {
+          res.status(badRequestErrCode).send({
+            message: 'Переданы некорректные данные при создании пользователя',
+          });
+        } else {
+          res
+            .status(serverErrCode)
+            .send({ message: 'Произошла ошибка на сервере' });
+        }
+      });
+  } else {
+    res.status(badRequestErrCode).send({
+      message: 'Переданы некорректные данные при создании пользователя',
     });
+  }
 };
 
 const patchUserInfo = (req, res) => {
