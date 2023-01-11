@@ -4,9 +4,9 @@ const unauthorizedErrCode = 401;
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
+  console.log(req.headers);
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    console.log('auth: ' + authorization);
     return res
       .status(unauthorizedErrCode)
       .send({ message: 'Необходима авторизация' });
