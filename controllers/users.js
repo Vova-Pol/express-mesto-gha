@@ -155,6 +155,16 @@ const login = (req, res) => {
     });
 };
 
+const getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      res.status(serverErrCode).send({ message: 'Ошибка на сервере' + err });
+    });
+};
+
 module.exports = {
   getUsers,
   postUser,
@@ -162,4 +172,5 @@ module.exports = {
   patchUserInfo,
   patchUserAvatar,
   login,
+  getCurrentUser,
 };
