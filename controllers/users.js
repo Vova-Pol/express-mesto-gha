@@ -160,8 +160,8 @@ const getCurrentUser = (req, res) => {
     .then((user) => {
       res.send({ data: user });
     })
-    .catch((err) => {
-      res.status(serverErrCode).send({ message: 'Ошибка на сервере' + err });
+    .catch(() => {
+      res.status(serverErrCode).send({ message: 'Ошибка на сервере' });
     });
 };
 

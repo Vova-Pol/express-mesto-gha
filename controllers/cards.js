@@ -37,28 +37,37 @@ const postCard = (req, res) => {
     });
 };
 
-const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((cardData) => {
-      if (cardData) {
-        res.send({ data: cardData });
-      } else {
-        res.status(notFoundErrCode).send({
-          message: 'Карточка с указанным _id не найдена',
-        });
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(badRequestErrCode).send({
-          message: 'Передан некорректный _id пользователя',
-        });
-      } else {
-        res.status(serverErrCode).send({
-          message: 'Произошла ошибка на сервере',
-        });
-      }
-    });
+const deleteCard = async (req, res) => {
+  const { cardId } = req.params;
+  const userId = req.user._id;
+  const cardData = await Card.findById(cardId);
+
+  if (String(cardData.owner) === userId) {
+    console.log('You are in');
+    Card.findByIdAndRemove(cardId)
+      .then((data) => {
+        if (data) {
+          res.send({ data });
+        } else {
+          res.status(notFoundErrCode).send({
+            message: 'Карточка с указанным _id не найдена',
+          });
+        }
+      })
+      .catch((err) => {
+        if (err.name === 'CastError') {
+          res.status(badRequestErrCode).send({
+            message: 'Передан некорректный _id карточки',
+          });
+        } else {
+          res.status(serverErrCode).send({
+            message: 'Произошла ошибка на сервере',
+          });
+        }
+      });
+  } else {
+    res.send({ message: 'Вы не можете удалять чужие карточки' });
+  }
 };
 
 const putLike = (req, res) => {
