@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
+const ConflictErr = require('../errors/conflict-error');
 const User = require('../models/user');
 
 const getUsers = (req, res, next) => {
@@ -46,6 +47,8 @@ const postUser = (req, res, next) => {
             'Переданы некорректные данные при создании пользователя',
           ),
         );
+      } else if (err.code === 11000) {
+        next(new ConflictErr('Пользователь с таким email уже существует'));
       } else {
         next(err);
       }
