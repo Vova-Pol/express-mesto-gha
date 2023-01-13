@@ -1,4 +1,10 @@
 const usersRouter = require('express').Router();
+const { celebrate } = require('celebrate');
+const {
+  getUserByIdConfig,
+  patchUserInfoConfig,
+  patchUserAvatarConfig,
+} = require('../utils/celebrateValidConfig');
 
 const {
   getUsers,
@@ -8,11 +14,15 @@ const {
   getCurrentUser,
 } = require('../controllers/users');
 
-usersRouter.get('/users', getUsers);
-usersRouter.get('/users/me', getCurrentUser);
-usersRouter.get('/users/:userId', getUserById);
+usersRouter.get('/', getUsers);
+usersRouter.get('/me', getCurrentUser);
+usersRouter.get('/:userId', celebrate(getUserByIdConfig), getUserById);
 
-usersRouter.patch('/users/me', patchUserInfo);
-usersRouter.patch('/users/me/avatar', patchUserAvatar);
+usersRouter.patch('/me', celebrate(patchUserInfoConfig), patchUserInfo);
+usersRouter.patch(
+  '/me/avatar',
+  celebrate(patchUserAvatarConfig),
+  patchUserAvatar,
+);
 
 module.exports = usersRouter;

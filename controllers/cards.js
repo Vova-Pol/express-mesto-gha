@@ -35,14 +35,12 @@ const deleteCard = async (req, res, next) => {
   const userId = req.user._id;
   const cardData = await Card.findById(cardId);
 
-  if (String(cardData.owner) === userId) {
+  if (!cardData) {
+    next(new NotFoundErr('Карточка с указанным _id не найдена'));
+  } else if (String(cardData.owner) === userId) {
     Card.findByIdAndRemove(cardId)
       .then((data) => {
-        if (data) {
-          res.send({ data });
-        } else {
-          throw new NotFoundErr('Карточка с указанным _id не найдена');
-        }
+        res.send({ data });
       })
       .catch((err) => {
         if (err.name === 'CastError') {
