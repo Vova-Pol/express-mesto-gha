@@ -43,7 +43,6 @@ const deleteCard = async (req, res) => {
   const cardData = await Card.findById(cardId);
 
   if (String(cardData.owner) === userId) {
-    console.log('You are in');
     Card.findByIdAndRemove(cardId)
       .then((data) => {
         if (data) {
