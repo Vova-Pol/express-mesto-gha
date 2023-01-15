@@ -46,7 +46,14 @@ const postUser = (req, res, next) => {
       avatar,
     }))
     .then((newUser) => {
-      res.send({ data: newUser });
+      res.send({
+        data: {
+          email: newUser.email,
+          name: newUser.name,
+          about: newUser.about,
+          avatar: newUser.avatar,
+        },
+      });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
