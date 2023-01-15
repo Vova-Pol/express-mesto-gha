@@ -1,5 +1,6 @@
 const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
+const ForbiddenErr = require('../errors/forbidden-error');
 const Card = require('../models/card');
 
 const getCards = (req, res, next) => {
@@ -50,7 +51,7 @@ const deleteCard = async (req, res, next) => {
         }
       });
   } else {
-    res.send({ message: 'Вы не можете удалять чужие карточки' });
+    next(new ForbiddenErr('Вы не можете удалять чужие карточки'));
   }
 };
 
