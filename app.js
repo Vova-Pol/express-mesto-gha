@@ -38,6 +38,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({
     message: statusCode === 500 ? 'Ошибка на сервере' : message,
   });
+  next();
 });
 
 // --- Запуск сервера
