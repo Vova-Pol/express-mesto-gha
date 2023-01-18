@@ -5,6 +5,7 @@ const Card = require('../models/card');
 
 const getCards = (req, res, next) => {
   Card.find()
+    .populate(['owner', 'likes'])
     .then((cardsData) => {
       res.send({ data: cardsData });
     })
@@ -34,7 +35,7 @@ const postCard = (req, res, next) => {
 const deleteCard = async (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
-  const cardData = await Card.findById(cardId);
+  const cardData = await Card.findById(cardId).populate('User');
 
   if (!cardData) {
     next(new NotFoundErr('Карточка с указанным _id не найдена'));
