@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const { errors, celebrate } = require('celebrate');
 const { postUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const centralErrorHandling = require('./middlewares/centralErrorHandling');
 const NotFoundErr = require('./errors/not-found-error');
 const { signInConfig, signUpConfig } = require('./utils/celebrateValidConfig');
 const mainRouter = require('./routers');
@@ -29,15 +30,7 @@ app.use('*', () => {
 // --- Обработка ошибок
 
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res.status(statusCode).send({
-    message: statusCode === 500 ? `Ошибка на сервере: ${message}` : message,
-  });
-  next();
-});
+app.use(centralErrorHandling);
 
 // --- Запуск сервера
 
