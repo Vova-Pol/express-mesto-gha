@@ -2,12 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors, celebrate } = require('celebrate');
-const usersRouter = require('./routers/users');
-const cardsRouter = require('./routers/cards');
 const { postUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundErr = require('./errors/not-found-error');
 const { signInConfig, signUpConfig } = require('./utils/celebrateValidConfig');
+const mainRouter = require('./routers');
 
 const { PORT = 3000 } = process.env;
 const DB_URL = 'mongodb://localhost:27017/mestodb';
@@ -21,8 +20,7 @@ app.post('/signup', celebrate(signUpConfig), postUser);
 app.post('/signin', celebrate(signInConfig), login);
 
 app.use(auth);
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use('/', mainRouter);
 
 app.use('*', () => {
   throw new NotFoundErr('Такой страницы не существует');
