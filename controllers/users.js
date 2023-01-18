@@ -69,12 +69,10 @@ const patchUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   const newInfo = {};
 
-  if (name && about) {
+  if (name) {
     newInfo.name = name;
-    newInfo.about = about;
-  } else if (name) {
-    newInfo.name = name;
-  } else if (about) {
+  }
+  if (about) {
     newInfo.about = about;
   }
 
@@ -86,7 +84,7 @@ const patchUserInfo = (req, res, next) => {
       if (newData) {
         res.send({ data: newData });
       } else {
-        throw new NotFoundErr('Пользователь с указанным _id не найден');
+        next(new NotFoundErr('Пользователь с указанным _id не найден'));
       }
     })
     .catch((err) => {
