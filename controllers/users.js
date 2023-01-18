@@ -94,8 +94,6 @@ const patchUserInfo = (req, res, next) => {
             'Переданы некорректные данные при обновлении профиля',
           ),
         );
-      } else if (err.name === 'CastError') {
-        next(new BadRequestErr('Передан некорректный _id пользователя'));
       } else {
         next(err);
       }
@@ -122,8 +120,6 @@ const patchUserAvatar = (req, res, next) => {
             'Переданы некорректные данные при обновлении аватара',
           ),
         );
-      } else if (err.name === 'CastError') {
-        next(new BadRequestErr('Передан некорректный _id пользователя'));
       } else {
         next(err);
       }
