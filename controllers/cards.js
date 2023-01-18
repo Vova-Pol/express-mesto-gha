@@ -35,22 +35,22 @@ const postCard = (req, res, next) => {
 const deleteCard = async (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
-  const cardData = await Card.findById(cardId).populate('User');
+  let cardData;
+  try {
+    cardData = await Card.findById(cardId);
+  } catch (err) {
+    if (err.name === 'CastError') {
+      next(new BadRequestErr('Передан некорректный _id карточки'));
+    } else {
+      next(err);
+    }
+  }
 
   if (!cardData) {
     next(new NotFoundErr('Карточка с указанным _id не найдена'));
   } else if (String(cardData.owner) === userId) {
-    Card.findByIdAndRemove(cardId)
-      .then((data) => {
-        res.send({ data });
-      })
-      .catch((err) => {
-        if (err.name === 'CastError') {
-          next(new BadRequestErr('Передан некорректный _id карточки'));
-        } else {
-          next(err);
-        }
-      });
+    res.send({ data: cardData });
+    cardData.remove();
   } else {
     next(new ForbiddenErr('Вы не можете удалять чужие карточки'));
   }
