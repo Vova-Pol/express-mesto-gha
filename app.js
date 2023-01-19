@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors, celebrate } = require('celebrate');
+const bodyParser = require('body-parser');
 const { postUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const centralErrorHandling = require('./middlewares/centralErrorHandling');
@@ -27,7 +28,7 @@ app.use('*', (req, res, next) => {
 
 // --- Обработка ошибок
 
-app.use(errors());
+// app.use(errors());
 app.use(centralErrorHandling);
 
 // --- Запуск сервера

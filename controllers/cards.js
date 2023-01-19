@@ -1,6 +1,9 @@
+const { Error } = require('mongoose');
+
 const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
 const ForbiddenErr = require('../errors/forbidden-error');
+
 const Card = require('../models/card');
 
 const getCards = (req, res, next) => {
@@ -20,7 +23,7 @@ const postCard = (req, res, next) => {
       res.send({ data: newCard });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof Error.ValidationError) {
         next(
           new BadRequestErr(
             'Переданы некорректные данные при создании карточки',
@@ -39,7 +42,7 @@ const deleteCard = async (req, res, next) => {
   try {
     cardData = await Card.findById(cardId);
   } catch (err) {
-    if (err.name === 'CastError') {
+    if (err instanceof Error.CastError) {
       next(new BadRequestErr('Передан некорректный _id карточки'));
     } else {
       next(err);
@@ -66,11 +69,11 @@ const putLike = (req, res, next) => {
       if (newData) {
         res.send({ data: newData });
       } else {
-        throw new NotFoundErr('Передан несуществующий _id карточки');
+        next(new NotFoundErr('Передан несуществующий _id карточки'));
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof Error.CastError) {
         next(
           new BadRequestErr(
             'Переданы некорректные данные для постановки лайка',
@@ -92,11 +95,11 @@ const deleteLike = (req, res, next) => {
       if (newData) {
         res.send({ data: newData });
       } else {
-        throw new NotFoundErr('Передан несуществующий _id карточки');
+        next(new NotFoundErr('Передан несуществующий _id карточки'));
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof Error.CastError) {
         next(
           new BadRequestErr('Переданы некорректные данные для снятия лайка'),
         );
