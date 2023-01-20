@@ -23,7 +23,7 @@ const getUserById = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof Error.CastError) {
         next(new BadRequestErr('Передан некорректный _id пользователя'));
       } else {
         next(err);
@@ -51,7 +51,7 @@ const postUser = (req, res, next) => {
       res.send({ data: newUser });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof Error.ValidationError) {
         next(
           new BadRequestErr(
             'Переданы некорректные данные при создании пользователя',
@@ -88,7 +88,7 @@ const patchUserInfo = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof Error.ValidationError) {
         next(
           new BadRequestErr(
             'Переданы некорректные данные при обновлении профиля',
@@ -114,7 +114,7 @@ const patchUserAvatar = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof Error.ValidationError) {
         next(
           new BadRequestErr(
             'Переданы некорректные данные при обновлении аватара',

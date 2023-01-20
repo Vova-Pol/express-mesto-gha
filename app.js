@@ -28,7 +28,7 @@ app.use('*', (req, res, next) => {
 
 // --- Обработка ошибок
 
-// app.use(errors());
+app.use(errors());
 app.use(centralErrorHandling);
 
 // --- Запуск сервера
