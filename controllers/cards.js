@@ -1,10 +1,9 @@
 const { Error } = require('mongoose');
-
 const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
 const ForbiddenErr = require('../errors/forbidden-error');
-
 const Card = require('../models/card');
+const { handleCardLike } = require('../utils/utils');
 
 const getCards = (req, res, next) => {
   Card.find()
@@ -60,53 +59,11 @@ const deleteCard = async (req, res, next) => {
 };
 
 const putLike = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .then((newData) => {
-      if (newData) {
-        res.send({ data: newData });
-      } else {
-        next(new NotFoundErr('Передан несуществующий _id карточки'));
-      }
-    })
-    .catch((err) => {
-      if (err instanceof Error.CastError) {
-        next(
-          new BadRequestErr(
-            'Переданы некорректные данные для постановки лайка',
-          ),
-        );
-      } else {
-        next(err);
-      }
-    });
+  handleCardLike(req, res, next, 'like');
 };
 
 const deleteLike = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
-    .then((newData) => {
-      if (newData) {
-        res.send({ data: newData });
-      } else {
-        next(new NotFoundErr('Передан несуществующий _id карточки'));
-      }
-    })
-    .catch((err) => {
-      if (err instanceof Error.CastError) {
-        next(
-          new BadRequestErr('Переданы некорректные данные для снятия лайка'),
-        );
-      } else {
-        next(err);
-      }
-    });
+  handleCardLike(req, res, next, 'dislike');
 };
 
 module.exports = {

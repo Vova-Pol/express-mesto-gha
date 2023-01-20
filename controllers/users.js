@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Error } = require('mongoose');
 const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
 const ConflictErr = require('../errors/conflict-error');
@@ -131,6 +132,9 @@ const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   getUser(req, res, next, userId);
 };
+
+/* Не уверен, правильно ли я использую функции-декораторы.
+По той же логике можно вынести обновление данных пользователя.  */
 
 module.exports = {
   getUsers,
