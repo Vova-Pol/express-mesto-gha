@@ -4,6 +4,7 @@ const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
 const ConflictErr = require('../errors/conflict-error');
 const User = require('../models/user');
+const { getUser } = require('../utils/utils');
 
 const getUsers = (req, res, next) => {
   User.find()
@@ -14,21 +15,8 @@ const getUsers = (req, res, next) => {
 };
 
 const getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
-    .then((userData) => {
-      if (userData) {
-        res.send({ data: userData });
-      } else {
-        throw new NotFoundErr('Пользователь по указанному _id не найден');
-      }
-    })
-    .catch((err) => {
-      if (err instanceof Error.CastError) {
-        next(new BadRequestErr('Передан некорректный _id пользователя'));
-      } else {
-        next(err);
-      }
-    });
+  const { userId } = req.params;
+  getUser(req, res, next, userId);
 };
 
 const postUser = (req, res, next) => {
@@ -110,7 +98,7 @@ const patchUserAvatar = (req, res, next) => {
       if (newData) {
         res.send({ data: newData });
       } else {
-        throw new NotFoundErr('Пользователь с указанным _id не найден');
+        next(new NotFoundErr('Пользователь с указанным _id не найден'));
       }
     })
     .catch((err) => {
@@ -140,11 +128,8 @@ const login = (req, res, next) => {
 };
 
 const getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
-    .then((user) => {
-      res.send({ data: user });
-    })
-    .catch(next);
+  const userId = req.user._id;
+  getUser(req, res, next, userId);
 };
 
 module.exports = {
