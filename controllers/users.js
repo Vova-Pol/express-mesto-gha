@@ -21,19 +21,19 @@ const getUserById = (req, res, next) => {
 };
 
 const postUser = (req, res, next) => {
-  const { email, password, name, about, avatar } = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
 
   bcrypt
     .hash(password, 10)
-    .then((hash) =>
-      User.create({
-        email,
-        password: hash,
-        name,
-        about,
-        avatar,
-      }),
-    )
+    .then((hash) => User.create({
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
+    }))
     .then((data) => {
       const newUser = JSON.parse(JSON.stringify(data));
       delete newUser.password;
