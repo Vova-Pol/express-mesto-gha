@@ -40,21 +40,25 @@ const deleteCard = async (req, res, next) => {
   let cardData;
   try {
     cardData = await Card.findById(cardId);
+
+    if (!cardData) {
+      next(new NotFoundErr('Карточка с указанным _id не найдена'));
+    } else if (String(cardData.owner) === userId) {
+      cardData
+        .remove()
+        .then((data) => {
+          res.send({ data });
+        })
+        .catch(next);
+    } else {
+      next(new ForbiddenErr('Вы не можете удалять чужие карточки'));
+    }
   } catch (err) {
     if (err instanceof Error.CastError) {
       next(new BadRequestErr('Передан некорректный _id карточки'));
     } else {
       next(err);
     }
-  }
-
-  if (!cardData) {
-    next(new NotFoundErr('Карточка с указанным _id не найдена'));
-  } else if (String(cardData.owner) === userId) {
-    res.send({ data: cardData });
-    cardData.remove();
-  } else {
-    next(new ForbiddenErr('Вы не можете удалять чужие карточки'));
   }
 };
 
