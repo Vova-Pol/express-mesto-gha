@@ -26,18 +26,21 @@ function getUser(req, res, next, userId) {
 
 // --- Handle Cards Requests
 
-function handleCardLike(req, res, next, action) {
+function handleCardLike(req, res, next, isLiked) {
   let updateConfig;
   let castErrorMessage;
 
-  if (action === 'like') {
+  if (!isLiked) {
     updateConfig = { $addToSet: { likes: req.user._id } };
     castErrorMessage = 'постановки';
-  } else if (action === 'dislike') {
+  } else if (isLiked) {
     updateConfig = { $pull: { likes: req.user._id } };
     castErrorMessage = 'снятия';
   } else {
-    console.log('аргумент action не определен или определен неверно');
+    console.error(
+      'Что-то не так в контроллере постановки/снятия лайка карточки',
+    );
+    return;
   }
 
   Card.findByIdAndUpdate(req.params.cardId, updateConfig, { new: true })

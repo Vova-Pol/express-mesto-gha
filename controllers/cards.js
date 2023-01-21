@@ -63,11 +63,11 @@ const deleteCard = async (req, res, next) => {
 };
 
 const putLike = (req, res, next) => {
-  handleCardLike(req, res, next, 'like');
+  handleCardLike(req, res, next, false);
 };
 
 const deleteLike = (req, res, next) => {
-  handleCardLike(req, res, next, 'dislike');
+  handleCardLike(req, res, next, true);
 };
 
 module.exports = {
