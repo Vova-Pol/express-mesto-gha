@@ -21,19 +21,19 @@ const getUserById = (req, res, next) => {
 };
 
 const postUser = (req, res, next) => {
-  const {
-    email, password, name, about, avatar,
-  } = req.body;
+  const { email, password, name, about, avatar } = req.body;
 
   bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({
-      email,
-      password: hash,
-      name,
-      about,
-      avatar,
-    }))
+    .then((hash) =>
+      User.create({
+        email,
+        password: hash,
+        name,
+        about,
+        avatar,
+      }),
+    )
     .then((data) => {
       const newUser = JSON.parse(JSON.stringify(data));
       delete newUser.password;
@@ -56,14 +56,7 @@ const postUser = (req, res, next) => {
 
 const patchUserInfo = (req, res, next) => {
   const { name, about } = req.body;
-  const newInfo = {};
-
-  if (name) {
-    newInfo.name = name;
-  }
-  if (about) {
-    newInfo.about = about;
-  }
+  const newInfo = { name, about };
 
   User.findByIdAndUpdate(req.user._id, newInfo, {
     new: true,
