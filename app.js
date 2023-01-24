@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const auth = require('./middlewares/auth');
 const centralErrorHandling = require('./middlewares/centralErrorHandling');
 const mainRouter = require('./routers');
 
@@ -11,7 +10,6 @@ const DB_URL = 'mongodb://localhost:27017/mestodb';
 const app = express();
 app.use(express.json());
 
-app.use(auth);
 app.use('/', mainRouter);
 
 // --- Обработка ошибок
