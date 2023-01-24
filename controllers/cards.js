@@ -3,7 +3,44 @@ const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
 const ForbiddenErr = require('../errors/forbidden-error');
 const Card = require('../models/card');
-const { handleCardLike } = require('../utils/utils');
+
+function handleCardLike(req, res, next, isLiked) {
+  let updateConfig;
+  let castErrorMessage;
+
+  if (!isLiked) {
+    updateConfig = { $addToSet: { likes: req.user._id } };
+    castErrorMessage = 'постановки';
+  } else if (isLiked) {
+    updateConfig = { $pull: { likes: req.user._id } };
+    castErrorMessage = 'снятия';
+  } else {
+    console.error(
+      'Что-то не так в контроллере постановки/снятия лайка карточки',
+    );
+    return;
+  }
+
+  Card.findByIdAndUpdate(req.params.cardId, updateConfig, { new: true })
+    .then((newData) => {
+      if (newData) {
+        res.send({ data: newData });
+      } else {
+        next(new NotFoundErr('Передан несуществующий _id карточки'));
+      }
+    })
+    .catch((err) => {
+      if (err instanceof Error.CastError) {
+        next(
+          new BadRequestErr(
+            `Переданы некорректные данные для ${castErrorMessage} лайка`,
+          ),
+        );
+      } else {
+        next(err);
+      }
+    });
+}
 
 const getCards = (req, res, next) => {
   Card.find()

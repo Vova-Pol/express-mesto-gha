@@ -5,7 +5,49 @@ const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
 const ConflictErr = require('../errors/conflict-error');
 const User = require('../models/user');
-const { getUser, updateUserProfile } = require('../utils/utils');
+
+function getUser(req, res, next, userId) {
+  User.findById(userId)
+    .then((userData) => {
+      if (userData) {
+        res.send({ data: userData });
+      } else {
+        next(new NotFoundErr('Пользователь по указанному _id не найден'));
+      }
+    })
+    .catch((err) => {
+      if (err instanceof Error.CastError) {
+        next(new BadRequestErr('Передан некорректный _id пользователя'));
+      } else {
+        next(err);
+      }
+    });
+}
+
+function updateUserProfile(req, res, next, userId, newData, errText) {
+  User.findByIdAndUpdate(userId, newData, {
+    new: true,
+    runValidators: true,
+  })
+    .then((data) => {
+      if (data) {
+        res.send({ data });
+      } else {
+        next(new NotFoundErr('Пользователь с указанным _id не найден'));
+      }
+    })
+    .catch((err) => {
+      if (err instanceof Error.ValidationError) {
+        next(
+          new BadRequestErr(
+            `Переданы некорректные данные при обновлении ${errText}`,
+          ),
+        );
+      } else {
+        next(err);
+      }
+    });
+}
 
 const getUsers = (req, res, next) => {
   User.find()
