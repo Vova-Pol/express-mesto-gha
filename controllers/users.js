@@ -5,7 +5,7 @@ const BadRequestErr = require('../errors/bad-request-error');
 const NotFoundErr = require('../errors/not-found-error');
 const ConflictErr = require('../errors/conflict-error');
 const User = require('../models/user');
-const { getUser } = require('../utils/utils');
+const { getUser, updateUserProfile } = require('../utils/utils');
 
 const getUsers = (req, res, next) => {
   User.find()
@@ -56,56 +56,17 @@ const postUser = (req, res, next) => {
 
 const patchUserInfo = (req, res, next) => {
   const { name, about } = req.body;
-  const newInfo = { name, about };
+  const newData = { name, about };
+  const userId = req.user._id;
 
-  User.findByIdAndUpdate(req.user._id, newInfo, {
-    new: true,
-    runValidators: true,
-  })
-    .then((newData) => {
-      if (newData) {
-        res.send({ data: newData });
-      } else {
-        next(new NotFoundErr('Пользователь с указанным _id не найден'));
-      }
-    })
-    .catch((err) => {
-      if (err instanceof Error.ValidationError) {
-        next(
-          new BadRequestErr(
-            'Переданы некорректные данные при обновлении профиля',
-          ),
-        );
-      } else {
-        next(err);
-      }
-    });
+  updateUserProfile(req, res, next, userId, newData, 'профиля');
 };
 
 const patchUserAvatar = (req, res, next) => {
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar: req.body.avatar },
-    { new: true, runValidators: true },
-  )
-    .then((newData) => {
-      if (newData) {
-        res.send({ data: newData });
-      } else {
-        next(new NotFoundErr('Пользователь с указанным _id не найден'));
-      }
-    })
-    .catch((err) => {
-      if (err instanceof Error.ValidationError) {
-        next(
-          new BadRequestErr(
-            'Переданы некорректные данные при обновлении аватара',
-          ),
-        );
-      } else {
-        next(err);
-      }
-    });
+  const newData = { avatar: req.body.avatar };
+  const userId = req.user._id;
+
+  updateUserProfile(req, res, next, userId, newData, 'аватара');
 };
 
 const login = (req, res, next) => {
@@ -125,9 +86,6 @@ const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   getUser(req, res, next, userId);
 };
-
-/* Не уверен, правильно ли я использую функции-декораторы.
-По той же логике можно вынести обновление данных пользователя.  */
 
 module.exports = {
   getUsers,

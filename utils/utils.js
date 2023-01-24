@@ -24,6 +24,31 @@ function getUser(req, res, next, userId) {
     });
 }
 
+function updateUserProfile(req, res, next, userId, newData, errText) {
+  User.findByIdAndUpdate(userId, newData, {
+    new: true,
+    runValidators: true,
+  })
+    .then((data) => {
+      if (data) {
+        res.send({ data });
+      } else {
+        next(new NotFoundErr('Пользователь с указанным _id не найден'));
+      }
+    })
+    .catch((err) => {
+      if (err instanceof Error.ValidationError) {
+        next(
+          new BadRequestErr(
+            `Переданы некорректные данные при обновлении ${errText}`,
+          ),
+        );
+      } else {
+        next(err);
+      }
+    });
+}
+
 // --- Handle Cards Requests
 
 function handleCardLike(req, res, next, isLiked) {
@@ -64,4 +89,4 @@ function handleCardLike(req, res, next, isLiked) {
     });
 }
 
-module.exports = { getUser, handleCardLike };
+module.exports = { getUser, updateUserProfile, handleCardLike };
