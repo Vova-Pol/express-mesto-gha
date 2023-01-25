@@ -81,12 +81,8 @@ const deleteCard = async (req, res, next) => {
     if (!cardData) {
       next(new NotFoundErr('Карточка с указанным _id не найдена'));
     } else if (String(cardData.owner) === userId) {
-      cardData
-        .remove()
-        .then((data) => {
-          res.send({ data });
-        })
-        .catch(next);
+      const data = await cardData.remove();
+      res.send({ data });
     } else {
       next(new ForbiddenErr('Вы не можете удалять чужие карточки'));
     }
